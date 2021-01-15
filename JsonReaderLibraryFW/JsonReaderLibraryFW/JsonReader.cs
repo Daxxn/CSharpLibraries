@@ -48,17 +48,19 @@ namespace JsonReaderLibrary
                throw new ArgumentException($"Path is not a file: '{path}'");
             }
 
-            if (data is null)
+            if (data == null)
             {
                throw new ArgumentException($"Provided data cannot be null.");
             }
 
             if (createNew)
             {
-               using StreamWriter writer = new StreamWriter(path);
-               string json = JsonConvert.SerializeObject(data, autoIndent ? Formatting.Indented : Formatting.None);
-               writer.Write(json);
-               writer.Flush();
+               using (StreamWriter writer = new StreamWriter(path))
+               {
+                  string json = JsonConvert.SerializeObject(data, autoIndent ? Formatting.Indented : Formatting.None);
+                  writer.Write(json);
+                  writer.Flush();
+               }
             }
          }
          catch (Exception)
@@ -85,7 +87,7 @@ namespace JsonReaderLibrary
                throw new ArgumentException($"Path is not a file: '{path}'");
             }
 
-            if (data is null)
+            if (data == null)
             {
                throw new ArgumentException($"Provided data cannot be null.");
             }
@@ -93,10 +95,12 @@ namespace JsonReaderLibrary
             if (createNew)
             {
                SerializeSettings.Formatting = Formatting.Indented;
-               using StreamWriter writer = new StreamWriter(path);
-               string json = JsonConvert.SerializeObject(data, SerializeSettings);
-               writer.Write(json);
-               writer.Flush();
+               using (StreamWriter writer = new StreamWriter(path))
+               {
+                  string json = JsonConvert.SerializeObject(data, SerializeSettings);
+                  writer.Write(json);
+                  writer.Flush();
+               }
             }
          }
          catch (Exception)
@@ -119,7 +123,7 @@ namespace JsonReaderLibrary
                throw new ArgumentException($"Path is not a file: '{path}'");
             }
 
-            if (data is null)
+            if (data == null)
             {
                throw new ArgumentException($"Provided data cannot be null.");
             }
@@ -132,10 +136,12 @@ namespace JsonReaderLibrary
                   ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
                   Formatting = Formatting.Indented,
                };
-               using StreamWriter writer = new StreamWriter(path);
-               string json = JsonConvert.SerializeObject(data, serializeSettings);
-               writer.Write(json);
-               writer.Flush();
+               using (StreamWriter writer = new StreamWriter(path))
+               {
+                  string json = JsonConvert.SerializeObject(data, serializeSettings);
+                  writer.Write(json);
+                  writer.Flush();
+               }
             }
          }
          catch (Exception)
@@ -193,8 +199,11 @@ namespace JsonReaderLibrary
                throw new ArgumentException($"Path is not a file: '{path}'");
             }
 
-            using StreamReader reader = new StreamReader(path);
-            return JsonConvert.DeserializeObject<TModel>(reader.ReadToEnd(), DeserializerSettings);
+            using (StreamReader reader = new StreamReader(path))
+            {
+               return JsonConvert.DeserializeObject<TModel>(reader.ReadToEnd(), DeserializerSettings);
+
+            }
          }
          catch (Exception)
          {
